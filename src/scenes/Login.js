@@ -1,6 +1,6 @@
-import { getLoginHash } from '/src/crypto.js'
-import { sendXMLPacket, getCredentials } from '/src/index.js'
-import Button from '/src/components/Button.js'
+import { getLoginHash } from '../crypto.js'
+import { sendXMLPacket, getCredentials } from '../index.js'
+import Button from '../components/Button.js'
 
 /* START OF COMPILED CODE */
 
@@ -19,7 +19,7 @@ class Login extends Phaser.Scene {
 
 		this.load.pack("asset-pack", "assets/asset-pack.json");
 		this.load.plugin('rexinputtextplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexinputtextplugin.min.js', true);    
-    }
+	}
 
 	/** @returns {void} */
 	editorCreate() {
@@ -164,33 +164,89 @@ class Login extends Phaser.Scene {
 
 	create() {
 		var usernameInput = this.add.rexInputText(796, 150, 440, 60, {
-            "type": "textarea",
+			"type": "textarea",
 			"color": "#000000ff",
 			"fontFamily": "Burbank Small",
 			"fontSize": "40px",
 			"padding-left": "10px",
 			"padding-right": "10px"
-        })
+		})
 		var passwordInput = this.add.rexInputText(796, 228, 440, 60, {
-            "type": "password",
+			"type": "password",
 			"color": "#000000ff",
 			"fontFamily": "Burbank Small",
 			"fontSize": "40px",
 			"padding-left": "10px",
 			"padding-right": "10px"
-        })
+		})
 		this.editorCreate();
-		
+
 		this.usernameInput = usernameInput;
 		this.passwordInput = passwordInput;
+
+		// Make text links interactive
+		this.createAccountTextLower.setInteractive({ cursor: 'pointer' });
+		this.createAccountTextLower.on('pointerover', () => {
+			this.createAccountTextLower.setStyle({ color: '#aaddff' });
+		});
+		this.createAccountTextLower.on('pointerout', () => {
+			this.createAccountTextLower.setStyle({ color: '#ffffffff' });
+		});
+		this.createAccountTextLower.on('pointerup', () => {
+			this.openCreateAccount();
+		});
+
+		this.forgotPasswordText.setInteractive({ cursor: 'pointer' });
+		this.forgotPasswordText.on('pointerover', () => {
+			this.forgotPasswordText.setStyle({ color: '#aaddff' });
+		});
+		this.forgotPasswordText.on('pointerout', () => {
+			this.forgotPasswordText.setStyle({ color: '#ffffffff' });
+		});
+		this.forgotPasswordText.on('pointerup', () => {
+			this.openForgotPassword();
+		});
+
+		this.rulesText.setInteractive({ cursor: 'pointer' });
+		this.rulesText.on('pointerover', () => {
+			this.rulesText.setStyle({ color: '#aaddff' });
+		});
+		this.rulesText.on('pointerout', () => {
+			this.rulesText.setStyle({ color: '#ffffffff' });
+		});
+		this.rulesText.on('pointerup', () => {
+			this.openRules();
+		});
 	}
-	
+
+	openCreateAccount() {
+		console.log("[v0] Create Account clicked");
+		window.open('https://www.clubpenguin.com/create-account', '_blank');
+	}
+
+	openForgotPassword() {
+		console.log("[v0] Forgot Password clicked");
+		window.open('https://www.clubpenguin.com/forgot-password', '_blank');
+	}
+
+	openRules() {
+		console.log("[v0] Rules clicked");
+		window.open('https://www.clubpenguin.com/learn/rules', '_blank');
+	}
+
 	usernameInput;
 	passwordInput;
 
 	login(){
-		var username = this.usernameInput.text
-		var password = this.passwordInput.text
+		var username = this.usernameInput.text.trim()
+		var password = this.passwordInput.text.trim()
+
+		// Demo shortcut — no server needed
+		if (username.toLowerCase() === 'demo' && password.toLowerCase() === 'demo') {
+			this.enterDemoWorld(username)
+			return
+		}
+
 		var loginHash = getLoginHash(password)
 		sendXMLPacket("<msg t='sys'><body action='verChk' r='0'><ver v='253' /></body></msg>")
 		sendXMLPacket("<msg t='sys'><body action='rndK' r='-1'></body></msg>")
@@ -199,6 +255,13 @@ class Login extends Phaser.Scene {
 			var credentials = getCredentials()
 			console.log(credentials)
 		},1000)
+	}
+
+	enterDemoWorld(username) {
+		this.cameras.main.fadeOut(400, 0, 0, 0);
+		this.cameras.main.once('camerafadeoutcomplete', () => {
+			this.scene.start('Load', { username: username });
+		});
 	}
 
 	/* END-USER-CODE */

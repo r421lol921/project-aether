@@ -1,23 +1,33 @@
 import Login from './scenes/Login.js';
+import Load from './scenes/Load.js';
+import World from './scenes/World.js';
 
-var loginServer = new WebSocket("ws://localhost:6112")
+var loginServer = null
 var global = {}
 
-loginServer.onmessage = function(event) {
-	console.log("[PACKET RECEIVED] => " + event.data)
-	var packet = event.data.split('%')
-	var packetType = packet[2]
-	var packetContent = packet[4]
-	if (packetType == "l"){
-		global.credentials = packetContent
-		var friendsLogin = packet[5]
-		var worldPop = packet[7]
-		worldPop = worldPop.split('|')
+try {
+	loginServer = new WebSocket("ws://localhost:6112")
+
+	loginServer.onmessage = function(event) {
+		console.log("[PACKET RECEIVED] => " + event.data)
+		var packet = event.data.split('%')
+		var packetType = packet[2]
+		var packetContent = packet[4]
+		if (packetType == "l"){
+			global.credentials = packetContent
+			var friendsLogin = packet[5]
+			var worldPop = packet[7]
+			worldPop = worldPop.split('|')
+		}
 	}
+} catch(e) {
+	console.warn("Login server not available:", e.message)
 }
 
 export function sendXMLPacket(packet){
-	loginServer.send(packet)
+	if (loginServer && loginServer.readyState === WebSocket.OPEN) {
+		loginServer.send(packet)
+	}
 }
 
 export function getCredentials(){
@@ -30,11 +40,11 @@ window.addEventListener('load', function () {
 		width: 1520,
 		height: 960,
 		type: Phaser.AUTO,
-        backgroundColor: "#242424",
+		backgroundColor: "#242424",
 		parent: 'game',
 		dom: {
-        	createContainer: true
-    	},
+			createContainer: true
+		},
 		scale: {
 			mode: Phaser.Scale.FIT,
 			autoCenter: Phaser.Scale.CENTER_BOTH
@@ -47,6 +57,8 @@ window.addEventListener('load', function () {
 });
 
 function create() {
-		this.scene.add("Login", Login, true);
+	this.scene.add("Login", Login, false);
+	this.scene.add("Load", Load, false);
+	this.scene.add("World", World, false);
+	this.scene.start("Login");
 }
-
