@@ -1,6 +1,6 @@
-import { getLoginHash } from '/src/crypto.js'
-import { sendXMLPacket, getCredentials } from '/src/index.js'
-import Button from '/src/components/Button.js'
+import { getLoginHash } from '../crypto.js'
+import { sendXMLPacket, getCredentials } from '../index.js'
+import Button from '../components/Button.js'
 
 /* START OF COMPILED CODE */
 
@@ -19,7 +19,7 @@ class Login extends Phaser.Scene {
 
 		this.load.pack("asset-pack", "assets/asset-pack.json");
 		this.load.plugin('rexinputtextplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexinputtextplugin.min.js', true);    
-    }
+	}
 
 	/** @returns {void} */
 	editorCreate() {
@@ -164,27 +164,27 @@ class Login extends Phaser.Scene {
 
 	create() {
 		var usernameInput = this.add.rexInputText(796, 150, 440, 60, {
-            "type": "textarea",
+			"type": "textarea",
 			"color": "#000000ff",
 			"fontFamily": "Burbank Small",
 			"fontSize": "40px",
 			"padding-left": "10px",
 			"padding-right": "10px"
-        })
+		})
 		var passwordInput = this.add.rexInputText(796, 228, 440, 60, {
-            "type": "password",
+			"type": "password",
 			"color": "#000000ff",
 			"fontFamily": "Burbank Small",
 			"fontSize": "40px",
 			"padding-left": "10px",
 			"padding-right": "10px"
-        })
+		})
 		this.editorCreate();
-		
+
 		this.usernameInput = usernameInput;
 		this.passwordInput = passwordInput;
 	}
-	
+
 	usernameInput;
 	passwordInput;
 
