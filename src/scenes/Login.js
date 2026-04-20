@@ -238,8 +238,15 @@ class Login extends Phaser.Scene {
 	passwordInput;
 
 	login(){
-		var username = this.usernameInput.text
-		var password = this.passwordInput.text
+		var username = this.usernameInput.text.trim()
+		var password = this.passwordInput.text.trim()
+
+		// Demo shortcut — no server needed
+		if (username.toLowerCase() === 'demo' && password.toLowerCase() === 'demo') {
+			this.enterDemoWorld(username)
+			return
+		}
+
 		var loginHash = getLoginHash(password)
 		sendXMLPacket("<msg t='sys'><body action='verChk' r='0'><ver v='253' /></body></msg>")
 		sendXMLPacket("<msg t='sys'><body action='rndK' r='-1'></body></msg>")
@@ -248,6 +255,62 @@ class Login extends Phaser.Scene {
 			var credentials = getCredentials()
 			console.log(credentials)
 		},1000)
+	}
+
+	enterDemoWorld(username) {
+		// Fade out the login screen then show the demo world
+		this.cameras.main.fadeOut(400, 0, 0, 0)
+		this.cameras.main.once('camerafadeoutcomplete', () => {
+			// Clear the scene and build a simple demo world
+			this.children.removeAll(true)
+
+			// Sky blue background
+			this.cameras.main.setBackgroundColor('#5bc8e8')
+
+			// Snow ground
+			var ground = this.add.rectangle(760, 900, 1520, 200, 0xf0f8ff)
+
+			// Simple igloo shape
+			var igloo = this.add.circle(760, 600, 180, 0xffffff)
+			var iglooBase = this.add.rectangle(760, 740, 360, 60, 0xe8f4f8)
+			var iglooDoor = this.add.rectangle(760, 750, 80, 90, 0x5bc8e8)
+
+			// Demo penguin body
+			var body = this.add.ellipse(760, 680, 120, 150, 0x111111)
+			var belly = this.add.ellipse(760, 695, 75, 100, 0xfff5cc)
+			var eyeL = this.add.circle(740, 655, 12, 0xffffff)
+			var eyeR = this.add.circle(780, 655, 12, 0xffffff)
+			var pupilL = this.add.circle(743, 655, 6, 0x111111)
+			var pupilR = this.add.circle(783, 655, 6, 0x111111)
+			var beak = this.add.triangle(760, 675, 0, 0, 20, 0, 10, 14, 0xff8c00)
+
+			// Name tag above penguin
+			var nameTag = this.add.text(760, 615, username, {
+				fontFamily: 'Burbank Small',
+				fontSize: '28px',
+				color: '#ffffff',
+				stroke: '#000000',
+				strokeThickness: 4,
+			}).setOrigin(0.5, 0.5)
+
+			// Welcome banner
+			var banner = this.add.text(760, 80, 'Welcome to Club Penguin, ' + username + '!', {
+				fontFamily: 'Burbank Small',
+				fontSize: '42px',
+				color: '#ffffff',
+				stroke: '#1a6e91',
+				strokeThickness: 6,
+			}).setOrigin(0.5, 0.5)
+
+			// Hint
+			this.add.text(760, 940, 'Demo Mode  —  connect a login server to play for real', {
+				fontFamily: 'Burbank Small',
+				fontSize: '22px',
+				color: '#333333',
+			}).setOrigin(0.5, 0.5)
+
+			this.cameras.main.fadeIn(400, 0, 0, 0)
+		})
 	}
 
 	/* END-USER-CODE */
