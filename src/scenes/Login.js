@@ -183,6 +183,55 @@ class Login extends Phaser.Scene {
 
 		this.usernameInput = usernameInput;
 		this.passwordInput = passwordInput;
+
+		// Make text links interactive
+		this.createAccountTextLower.setInteractive({ cursor: 'pointer' });
+		this.createAccountTextLower.on('pointerover', () => {
+			this.createAccountTextLower.setStyle({ color: '#aaddff' });
+		});
+		this.createAccountTextLower.on('pointerout', () => {
+			this.createAccountTextLower.setStyle({ color: '#ffffffff' });
+		});
+		this.createAccountTextLower.on('pointerup', () => {
+			this.openCreateAccount();
+		});
+
+		this.forgotPasswordText.setInteractive({ cursor: 'pointer' });
+		this.forgotPasswordText.on('pointerover', () => {
+			this.forgotPasswordText.setStyle({ color: '#aaddff' });
+		});
+		this.forgotPasswordText.on('pointerout', () => {
+			this.forgotPasswordText.setStyle({ color: '#ffffffff' });
+		});
+		this.forgotPasswordText.on('pointerup', () => {
+			this.openForgotPassword();
+		});
+
+		this.rulesText.setInteractive({ cursor: 'pointer' });
+		this.rulesText.on('pointerover', () => {
+			this.rulesText.setStyle({ color: '#aaddff' });
+		});
+		this.rulesText.on('pointerout', () => {
+			this.rulesText.setStyle({ color: '#ffffffff' });
+		});
+		this.rulesText.on('pointerup', () => {
+			this.openRules();
+		});
+	}
+
+	openCreateAccount() {
+		console.log("[v0] Create Account clicked");
+		window.open('https://www.clubpenguin.com/create-account', '_blank');
+	}
+
+	openForgotPassword() {
+		console.log("[v0] Forgot Password clicked");
+		window.open('https://www.clubpenguin.com/forgot-password', '_blank');
+	}
+
+	openRules() {
+		console.log("[v0] Rules clicked");
+		window.open('https://www.clubpenguin.com/learn/rules', '_blank');
 	}
 
 	usernameInput;
