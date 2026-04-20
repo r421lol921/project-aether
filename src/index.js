@@ -1,4 +1,6 @@
 import Login from './scenes/Login.js';
+import Load from './scenes/Load.js';
+import World from './scenes/World.js';
 
 var loginServer = null
 var global = {}
@@ -55,5 +57,8 @@ window.addEventListener('load', function () {
 });
 
 function create() {
-	this.scene.add("Login", Login, true);
+	this.scene.add("Login", Login, false);
+	this.scene.add("Load", Load, false);
+	this.scene.add("World", World, false);
+	this.scene.start("Login");
 }
